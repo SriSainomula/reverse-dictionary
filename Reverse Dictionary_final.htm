@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="dZIvpHcMuj">
+  <meta baidu-gxt-verify-token="2edaaf8500440997a3b3b52a91b3e43e">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <link rel="shortcut icon" href="https://wantwords.thunlp.org/static/image/zm2.ico">
+  <link rel="bookmark" href="https://wantwords.thunlp.org/static/image/zm2.ico">
+  <meta name="keywords" content="万词王; wordwants; 反向; 词典; 语言; 写作; 助手; 查询; 清华大学; 自然语言; 实验室; 双语; 汉语; 英语; English; Chinese; word; corpus; reverse; dictionary; look up; search; find">
+  <meta name="description" content="万词王wordwants是一个反向词典系统,由清华大学自然语言处理实验室出品,广泛收录了多部词典数据,通过深度学习算法,实现通过描述意思来查询词语，解决您的用词烦恼。">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <title>Reverse Dictionary</title>
+  <link rel="stylesheet" href="Reverse%20Dictionary_final_files/jquery-ui.css">
+  <link rel="stylesheet" href="Reverse%20Dictionary_final_files/bootstrap.css"> 
+
+  <script src="Reverse%20Dictionary_final_files/jquery.js"></script>
+  <script src="Reverse%20Dictionary_final_files/bootstrap.js"></script>
+  <script src="Reverse%20Dictionary_final_files/jquery-ui.js"></script>
+
+  <script language="javascript" type="text/javascript" src="Reverse%20Dictionary_final_files/home.js"></script>
+
+  <style>
+  .ui-tabs .ui-tabs-nav {
+    background: #fbfbfb;
+  }
+  .ui-tabs-anchor {
+    background-color: #f8f8f8;
+  }
+  .container-fluid {
+    background-color: #f8f8f8;
+  }
+  .navbar-nav>li>a {
+      padding-top: 22.5px;
+      padding-bottom: 22.5px;
+  }
+  .btn-default {
+      background-color: #fbfbfb;
+  }
+  .ui-widget-header {
+      border: 1px solid #ddd;
+  }
+  .elem-center {
+      margin-left: 10%;
+      margin-right: 10%;
+  }
+  h1 {
+      font-size: 40px;
+      text-align: center;
+      font-weight:600;
+      color: #000000b0;
+  }
+  .clear {display: none;position: absolute;width: 16px;height: 16px; right: 100px; margin: 19px 0 0 -25px;background:url(../static/images/clear.png) no-repeat;outline: none; z-index: 3;}
+  </style>
+  
+    <style>
+    html {
+        height: 100%;
+    }
+    body {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .content {
+      flex: 1;
+    }
+    </style>
+          
+    <script>
+    $(function() {
+        $("#filter_CN").hide();
+        $("#filter_EE").hide();
+        $("#filter_EC").hide();
+        $("#filter_CE").hide();
+        if ($(window).width()<751 || window.innerWidth<768) {
+            $(".elem-center").css("margin", "-11px")
+        }
+        $(".clear").on("click",function () {
+            $(this).prev("input").val("").focus();
+        });
+        var input_id = $(".input-group .form-control"); //$("#description")
+        input_id.on("focus",function () {
+            $(this).parent().addClass("active");
+            if( $(this).val().length > 0){
+                $(this).next(".clear").show();
+            }else{
+                $(this).next(".clear").hide();
+            } 
+        });
+        input_id.on("blur",function () {
+            var $this = $(this);
+            $this.parent().removeClass("active");
+            $this.next(".clear").hide();
+        });
+        input_id.keyup(function(){
+            if( $(this).val().length > 0){
+                $(this).next(".clear").show();
+            }else{
+                $(this).next(".clear").hide();
+            }
+        });
+        $(".clear").on("mousedown",function(e) {
+            e.preventDefault();
+        });
+    });
+    window.onload=function(){
+        document.getElementById("description").focus();
+    }
+    //$(function() {
+    $(document).ready(function() {
+        $(".navbar-nav>li.active>a").css("background-color", "#f3f3f3");
+        $('.panel-heading').css("background-color","#fbfbfb");
+        $(".ui-tabs-anchor").css("background-color", "white").css("color", "#005aa5");
+    });
+    </script>
+    
+</head>
+
+
+<body style="" class="">
+<!--<a title="" class="pop" data-container="body" data-toggle="hide" data-content=""></a>-->
+<a title="" class="pop0" data-container="body" data-toggle="hide" data-content=""></a>
+<a title="" class="pop1" data-container="body" data-toggle="hide" data-content=""></a>
+<a title="" class="pop2" data-container="body" data-toggle="hide" data-content=""></a>
+<a title="" class="pop3" data-container="body" data-toggle="hide" data-content=""></a>
+<div class="visible-lg visible-md visible-sm">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation"> 
+         
+    </nav>
+</div>
+<div class="visible-xs">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation"> 
+        <div class="container-fluid"> 
+            <div class="navbar-header" style="height: 65px;"> 
+                <a class="navbar-brand" href="https://wantwords.thunlp.org/home" style="padding-top: 0px;"><img src="Reverse%20Dictionary_final_files/logo.svg" alt="反向词典" style="height:55px;margin-left: 0px;margin-top: 5px;"></a> 
+                <div class="btn-group" style="float: right; margin-right: 50px;">
+                    <button role="button" aria-label="菜单 menu" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="color: #286090;border-color: #f8f8f8;background-color: #f8f8f8;font-size: 1.5em;margin-top: 10px;">
+                        <span class="glyphicon glyphicon-align-justify"></span> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="active"><a href="https://wantwords.thunlp.org/home" id="idm_home"><span class="glyphicon glyphicon-home"></span> 主页</a></li> 
+                        <li><a href="file:///C:/Users/SRI%20SAI/Desktop/about/" id="idm_about"><img src="Reverse%20Dictionary_final_files/about.png" style="margin-bottom: 3px;" height="15"> 关于我们</a></li> 
+                        <li><a href="https://github.com/thunlp/WantWords" id="idm_link"><img src="Reverse%20Dictionary_final_files/github.png" style="margin-bottom: 3px;" height="15"> GitHub</a></li>
+                    </ul>
+                </div>
+            <div style="position: relative;float: right;left: 27%;"><a href="javascript:void(0)" onclick="popWin_v2();" style="color: red;">📢 来自研发团队的第二封信<span class="badge bg-danger" style="background-color: #f44336;position:relative;top:-2mm;left:-1mm;">1</span></a></div><div style="position: relative;float: right;left: 27%;"><a href="javascript:void(0)" onclick="popWin_v2();" style="color: red;">📢 来自研发团队的第二封信<span class="badge bg-danger" style="background-color: #f44336;position:relative;top:-2mm;left:-1mm;">1</span></a></div><div style="position: relative;float: right;left: 27%;"><a href="javascript:void(0)" onclick="popWin_v2();" style="color: red;">📢 来自研发团队的第二封信<span class="badge bg-danger" style="background-color: #f44336;position:relative;top:-2mm;left:-1mm;">1</span></a></div></div>
+        </div> 
+    </nav>
+</div>
+<div id="tabs" class="content ui-tabs ui-widget ui-widget-content ui-corner-all" style="top: 64px;">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
+        <li class="ui-state-default ui-corner-top ui-tabs-active ui-state-active ui-state-focus" role="tab" tabindex="0" aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="true"><a href="#tabs-1" style="font-family: STZhongsong; background-color: rgb(255, 255, 255); color: rgb(0, 90, 165);" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-1">తెలుగు</a></li>
+        <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-3" aria-labelledby="ui-id-2" aria-selected="false"><a href="#tabs-3" style="font-family: STZhongsong; background-color: rgb(255, 255, 255); color: rgb(0, 90, 165);" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-2">हिन्दी</a></li>
+        <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-2" aria-labelledby="ui-id-3" aria-selected="false"><a href="#tabs-2" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-3" style="background-color: rgb(255, 255, 255); color: rgb(0, 90, 165);">English</a></li>
+        <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-4" aria-labelledby="ui-id-4" aria-selected="false"><a href="#tabs-4" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-4" style="background-color: rgb(255, 255, 255); color: rgb(0, 90, 165);">தமிழ்</a></li>
+    </ul>
+    <div id="tabs-1" aria-labelledby="ui-id-1" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="true" aria-hidden="false" style="display: block;">
+        <br>
+        <h1 style="font-family: STZhongsong;">రివర్స్ నిఘంటువు</h1>
+        <br id="anchor1">
+        <br>
+        <br>
+        <br>
+        <div class="row elem-center">
+            <div class="input-group">
+                <input type="text" style="height: 54px; font-size: 1.3em;" class="form-control" id="description" autocomplete="off" placeholder="Enter a description or click 🔍directly to see an example"><a href="javascript:;" class="clear" style="display: none;"></a>
+                <span class="input-group-btn" style="font-size: 1.3em;">
+                    <button onclick="onkeySearch()" class="btn btn-default" role="button" aria-label="查询" type="button" style="color: grey;height: 54px; width: 76px;"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.row -->
+        <br>
+
+        <div id="filter_CN" style="display: none;">
+            <div class="panel panel-default visible-xs">
+                <div id="flip" class="panel-heading" style="text-align: center; background-color: rgb(251, 251, 251);">开启 筛选器 <span class="glyphicon glyphicon-filter"></span></div>
+                <div id="panel" class="panel-collapse collapse in" style="display:none; padding=50px">
+                    <form role="form">
+                    <div class="row" style="margin:10px;">
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <label for="filter2"><input type="text" id="filter2" onchange="modelProcecss()" class="form-control" placeholder="字数" title="词的字数通常为1到8，可用具体数字“n”或范围“&gt;n”、“&lt;n”来筛选。"></label>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <label for="filter4"><input type="text" id="filter4" onchange="modelProcecss()" class="form-control" placeholder="笔画数" title="词的总笔画数，可用具体数字“n”或范围“&gt;n”、“&lt;n”来筛选。"></label>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <label for="filter5"><input type="text" id="filter5" onchange="modelProcecss()" class="form-control" placeholder="词形" title="*为匹配0到多字；？匹配1字；+为且；[...]匹配集合内任一字；[^...]不匹配集合内任何字。每次仅支持1种模式。"></label>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <label for="filter3"><input type="text" id="filter3" onchange="modelProcecss()" class="form-control" placeholder="拼音字母" title="用首字母表示。如“字典”为“zd”。"></label>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                            <select class="form-control" id="POS_select_CC" onchange="modelProcecss()">
+                                <option value="0" selected="selected">全部词性</option>
+                                <option value="1">名词</option>
+                                <option value="2">动词</option>
+                                <option value="3">形容词</option>
+                                <option value="4">副词</option>
+                                <option value="5">介词</option>
+                                <option value="6">数词</option>
+                                <option value="7">连词</option>
+                                <option value="8">助词</option>
+                                <option value="9">量词</option>
+                                <option value="10">叹词</option>
+                                <option value="11">代词</option>
+                                <option value="12">拟声词</option>
+                                <option value="13">未标注</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                            <select class="form-control" id="rhyme_select_CC" onchange="modelProcecss()" title="根据《中华通韵》2019.01.01版。">
+                                <option value="0" selected="selected">全部韵脚</option>
+                                <option value="1">啊 a，ia，ua 阴平</option>
+                                <option value="2">啊 a，ia，ua 阳平</option>
+                                <option value="3">啊 a，ia，ua 上声</option>
+                                <option value="4">啊 a，ia，ua 去声</option>
+                                <option value="5">喔 o，uo 阴平</option>
+                                <option value="6">喔 o，uo 阳平</option>
+                                <option value="7">喔 o，uo 上声</option>
+                                <option value="8">喔 o，uo 去声</option>
+                                <option value="9">鹅 e，ie，üe 阴平</option>
+                                <option value="10">鹅 e，ie，üe 阳平</option>
+                                <option value="11">鹅 e，ie，üe 上声</option>
+                                <option value="12">鹅 e，ie，üe 去声</option>
+                                <option value="13">衣 i 阴平</option>
+                                <option value="14">衣 i 阳平</option>
+                                <option value="15">衣 i 上声</option>
+                                <option value="16">衣 i 去声</option>
+                                <option value="17">乌 u 阴平</option>
+                                <option value="18">乌 u 阳平</option>
+                                <option value="19">乌 u 上声</option>
+                                <option value="20">乌 u 去声</option>
+                                <option value="21">迂 ü 阴平</option>
+                                <option value="22">迂 ü 阳平</option>
+                                <option value="23">迂 ü 上声</option>
+                                <option value="24">迂 ü 去声</option>
+                                <option value="25">哀 ai，uai 阴平</option>
+                                <option value="26">哀 ai，uai 阳平</option>
+                                <option value="27">哀 ai，uai 上声</option>
+                                <option value="28">哀 ai，uai 去声</option>
+                                <option value="29">欸 ei，ui 阴平</option>
+                                <option value="30">欸 ei，ui 阳平</option>
+                                <option value="31">欸 ei，ui 上声</option>
+                                <option value="32">欸 ei，ui 去声</option>
+                                <option value="33">熬 ao，iao 阴平</option>
+                                <option value="34">熬 ao，iao 阳平</option>
+                                <option value="35">熬 ao，iao 上声</option>
+                                <option value="36">熬 ao，iao 去声</option>
+                                <option value="37">欧 ou，iu 阴平</option>
+                                <option value="38">欧 ou，iu 阳平</option>
+                                <option value="39">欧 ou，iu 上声</option>
+                                <option value="40">欧 ou，iu 去声</option>
+                                <option value="41">安 an，ian，uan，üan 阴平</option>
+                                <option value="42">安 an，ian，uan，üan 阳平</option>
+                                <option value="43">安 an，ian，uan，üan 上声</option>
+                                <option value="44">安 an，ian，uan，üan 去声</option>
+                                <option value="45">恩 en，in，un，ün 阴平</option>
+                                <option value="46">恩 en，in，un，ün 阳平</option>
+                                <option value="47">恩 en，in，un，ün 上声</option>
+                                <option value="48">恩 en，in，un，ün 去声</option>
+                                <option value="49">昂 ang，iang，uang 阴平</option>
+                                <option value="50">昂 ang，iang，uang 阳平</option>
+                                <option value="51">昂 ang，iang，uang 上声</option>
+                                <option value="52">昂 ang，iang，uang 去声</option>
+                                <option value="53">英 eng，ing 阴平</option>
+                                <option value="54">英 eng，ing 阳平</option>
+                                <option value="55">英 eng，ing 上声</option>
+                                <option value="56">英 eng，ing 去声</option>
+                                <option value="57">雍 ong，iong 阴平</option>
+                                <option value="58">雍 ong，iong 阳平</option>
+                                <option value="59">雍 ong，iong 上声</option>
+                                <option value="60">雍 ong，iong 去声</option>
+                                <option value="61">儿 er 阳平</option>
+                                <option value="62">儿 er 上声</option>
+                                <option value="63">儿 er 去声</option>
+                                <option value="64">未标注</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                            <select class="form-control" id="main_select" onchange="modelProcecss()" title="请选择排序方式，默认按相关性排序。">
+                                <option value="0" selected="selected">按相关性排序</option>
+                                <option value="1">按拼音排序</option>
+                                <option value="2">按拼音倒序</option>
+                                <option value="3">按总笔画数排序</option>
+                                <option value="4">按总笔画数倒序</option>
+                                <option value="5">按首字笔画数排序</option>
+                                <option value="6">按首字笔画数倒序</option>
+                                <option value="7">聚类排列</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <button onclick="clearFilter()" class="btn btn-default" role="button" aria-label="清空筛选条件" type="button">清空 <span class="glyphicon glyphicon-repeat"></span></button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <div class="visible-lg visible-md visible-sm">
+                <form role="form">
+                    <div class="row" style="margin:0;margin-left: 8%;">
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <span class="glyphicon glyphicon-filter"> </span><span style="font-size: 1.2em;"> 筛选:</span>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <label for="filter2"><input type="text" id="filter2" onchange="modelProcecss()" class="form-control" placeholder="字数" title="词的字数通常为1到8，可用具体数字“n”或范围“&gt;n”、“&lt;n”来筛选。"></label>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <label for="filter4"><input type="text" id="filter4" onchange="modelProcecss()" class="form-control" placeholder="笔画数" title="词的总笔画数，可用具体数字“n”或范围“&gt;n”、“&lt;n”来筛选。"></label>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <label for="filter5"><input type="text" id="filter5" onchange="modelProcecss()" class="form-control" placeholder="词形" title="*为匹配0到多字；？匹配1字；+为且；[...]匹配集合内任一字；[^...]不匹配集合内任何字。每次仅支持1种模式。"></label>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <label for="filter3"><input type="text" id="filter3" onchange="modelProcecss()" class="form-control" placeholder="拼音字母" title="用首字母表示。如“字典”为“zd”。"></label>
+                        </div>
+                        <div class="col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; width: 130px; padding-left: 5px; padding-right: 0px;">
+                            <select class="form-control" id="POS_select_CC" onchange="modelProcecss()">
+                                <option value="0" id="default_select_CC" selected="selected">全部词性</option>
+                                <option value="1">名词</option>
+                                <option value="2">动词</option>
+                                <option value="3">形容词</option>
+                                <option value="4">副词</option>
+                                <option value="5">介词</option>
+                                <option value="6">数词</option>
+                                <option value="7">连词</option>
+                                <option value="8">助词</option>
+                                <option value="9">量词</option>
+                                <option value="10">叹词</option>
+                                <option value="11">代词</option>
+                                <option value="12">拟声词</option>
+                                <option value="13">未标注</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                            <select class="form-control" id="rhyme_select_CC" onchange="modelProcecss()" title="根据《中华通韵》2019.01.01版。">
+                                <option value="0" selected="selected">全部韵脚</option>
+                                <option value="1">啊 a，ia，ua 阴平</option>
+                                <option value="2">啊 a，ia，ua 阳平</option>
+                                <option value="3">啊 a，ia，ua 上声</option>
+                                <option value="4">啊 a，ia，ua 去声</option>
+                                <option value="5">喔 o，uo 阴平</option>
+                                <option value="6">喔 o，uo 阳平</option>
+                                <option value="7">喔 o，uo 上声</option>
+                                <option value="8">喔 o，uo 去声</option>
+                                <option value="9">鹅 e，ie，üe 阴平</option>
+                                <option value="10">鹅 e，ie，üe 阳平</option>
+                                <option value="11">鹅 e，ie，üe 上声</option>
+                                <option value="12">鹅 e，ie，üe 去声</option>
+                                <option value="13">衣 i 阴平</option>
+                                <option value="14">衣 i 阳平</option>
+                                <option value="15">衣 i 上声</option>
+                                <option value="16">衣 i 去声</option>
+                                <option value="17">乌 u 阴平</option>
+                                <option value="18">乌 u 阳平</option>
+                                <option value="19">乌 u 上声</option>
+                                <option value="20">乌 u 去声</option>
+                                <option value="21">迂 ü 阴平</option>
+                                <option value="22">迂 ü 阳平</option>
+                                <option value="23">迂 ü 上声</option>
+                                <option value="24">迂 ü 去声</option>
+                                <option value="25">哀 ai，uai 阴平</option>
+                                <option value="26">哀 ai，uai 阳平</option>
+                                <option value="27">哀 ai，uai 上声</option>
+                                <option value="28">哀 ai，uai 去声</option>
+                                <option value="29">欸 ei，ui 阴平</option>
+                                <option value="30">欸 ei，ui 阳平</option>
+                                <option value="31">欸 ei，ui 上声</option>
+                                <option value="32">欸 ei，ui 去声</option>
+                                <option value="33">熬 ao，iao 阴平</option>
+                                <option value="34">熬 ao，iao 阳平</option>
+                                <option value="35">熬 ao，iao 上声</option>
+                                <option value="36">熬 ao，iao 去声</option>
+                                <option value="37">欧 ou，iu 阴平</option>
+                                <option value="38">欧 ou，iu 阳平</option>
+                                <option value="39">欧 ou，iu 上声</option>
+                                <option value="40">欧 ou，iu 去声</option>
+                                <option value="41">安 an，ian，uan，üan 阴平</option>
+                                <option value="42">安 an，ian，uan，üan 阳平</option>
+                                <option value="43">安 an，ian，uan，üan 上声</option>
+                                <option value="44">安 an，ian，uan，üan 去声</option>
+                                <option value="45">恩 en，in，un，ün 阴平</option>
+                                <option value="46">恩 en，in，un，ün 阳平</option>
+                                <option value="47">恩 en，in，un，ün 上声</option>
+                                <option value="48">恩 en，in，un，ün 去声</option>
+                                <option value="49">昂 ang，iang，uang 阴平</option>
+                                <option value="50">昂 ang，iang，uang 阳平</option>
+                                <option value="51">昂 ang，iang，uang 上声</option>
+                                <option value="52">昂 ang，iang，uang 去声</option>
+                                <option value="53">英 eng，ing 阴平</option>
+                                <option value="54">英 eng，ing 阳平</option>
+                                <option value="55">英 eng，ing 上声</option>
+                                <option value="56">英 eng，ing 去声</option>
+                                <option value="57">雍 ong，iong 阴平</option>
+                                <option value="58">雍 ong，iong 阳平</option>
+                                <option value="59">雍 ong，iong 上声</option>
+                                <option value="60">雍 ong，iong 去声</option>
+                                <option value="61">儿 er 阳平</option>
+                                <option value="62">儿 er 上声</option>
+                                <option value="63">儿 er 去声</option>
+                                <option value="64">未标注</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; width: 150px; padding-left: 5px; padding-right: 0px;">
+                            <select class="form-control" id="main_select" onchange="modelProcecss()" title="请选择排序方式，默认按相关性排序。">
+                                <option value="0" id="default_select" selected="selected">按相关性排序</option>
+                                <option value="1">按拼音排序</option>
+                                <option value="2">按拼音倒序</option>
+                                <option value="3">按总笔画数排序</option>
+                                <option value="4">按总笔画数倒序</option>
+                                <option value="5">按首字笔画数排序</option>
+                                <option value="6">按首字笔画数倒序</option>
+                                <option value="7">聚类排列</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                          <button onclick="clearFilter()" class="btn btn-default" role="button" aria-label="清空筛选条件" type="button">清空 <span class="glyphicon glyphicon-repeat"></span></button>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+            </div>
+        </div>
+
+
+        <div style="font-family:STKaiTi,Kaiti;font-size:1.2em;">
+            <div id="result"></div>
+        </div>
+
+    </div>
+    
+    <div id="tabs-2" aria-labelledby="ui-id-3" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" style="display: none;" aria-expanded="false" aria-hidden="true">
+        <br>
+        <h1 style="font-weight:normal;">Reverse Dictionary</h1>
+        <br id="anchor2">
+        <br>
+        <br>
+        <br>
+        <div class="row elem-center">
+            <div class="input-group">
+                <input type="text" style="height: 54px; font-size: 1.3em;" class="form-control" id="description_EE" placeholder="Enter a description or click 🔍 directly to see an example" autocomplete="off"><a href="javascript:;" class="clear" style="display: none;"></a>
+                <span class="input-group-btn" style="font-size: 1.3em;">
+                    <button onclick="onkeySearch_EE()" class="btn btn-default" role="button" aria-label="search" type="button" style="color: grey;height: 54px; width: 76px;"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.row -->
+        <br>
+
+            <div id="filter_EE" style="display: none;">
+                <div class="panel panel-default visible-xs">
+                    <div id="flip_EE" class="panel-heading" style="text-align: center; background-color: rgb(251, 251, 251);">Open Filter <span class="glyphicon glyphicon-filter"></span></div>
+                    <div id="panel_EE" class="panel-collapse collapse in" style="display:none; padding=50px">
+                        <form role="form">
+                        <div class="row" style="margin:10px;">
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="POS_select_EE" onchange="modelProcecss_EE()" title="Part of speech">
+                                    <option value="0" id="default_select_EE" selected="selected">POS: All</option>
+                                    <option value="1">Nouns</option>
+                                    <option value="2">Verbs</option>
+                                    <option value="3">Adjectives</option>
+                                    <option value="4">Adverbs</option>
+                                    <option value="5">Unknown</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter1_EE"><input type="text" id="filter1_EE" onchange="modelProcecss_EE()" class="form-control" placeholder="word length" title="Number of letters in a word. A specific number 'n' or a range '&gt;n' or '&lt;n'."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter2_EE"><input type="text" id="filter2_EE" onchange="modelProcecss_EE()" class="form-control" placeholder="initial" title="The first letter of a word."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter3_EE"><input type="text" id="filter3_EE" onchange="modelProcecss_EE()" class="form-control" placeholder="wildcard patterns" title="'*' means no or more letters, and '?' means one letter. Support only one mode at a time. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (e.g. c?mpu??? --&gt; computer)"></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="main_select_EE" onchange="modelProcecss_EE()" title="Ranking mode. The default is by relevance.">
+                                    <option value="0" id="default_select_EE" selected="selected">Rank by relevance</option>
+                                    <option value="1">Alphabetical order</option>
+                                    <option value="2">Alphabetical reverse order</option>
+                                    <option value="3">Length order</option>
+                                    <option value="4">Length reverse order</option>
+                                    <option value="5">Cluster order</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                  <button onclick="clearFilter()" class="btn btn-default" role="button" aria-label="clear filter" type="button">Clear <span class="glyphicon glyphicon-repeat"></span></button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="visible-lg visible-md visible-sm">
+                    <form role="form">
+                        <div class="row" style="margin: 0 8% 0 8%;">
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                  <span class="glyphicon glyphicon-filter"> </span><span style="font-size: 1.2em;"> Filter:</span>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="POS_select_EE" onchange="modelProcecss_EE()" title="Part of speech">
+                                    <option value="0" id="default_select_EE" selected="selected">POS: All</option>
+                                    <option value="1">Nouns</option>
+                                    <option value="2">Verbs</option>
+                                    <option value="3">Adjectives</option>
+                                    <option value="4">Adverbs</option>
+                                    <option value="5">Unknown</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter1_EE"><input type="text" id="filter1_EE" onchange="modelProcecss_EE()" class="form-control" placeholder="word length" title="Number of letters in a word. A specific number 'n' or a range '&gt;n' or '&lt;n'."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter2_EE"><input type="text" id="filter2_EE" onchange="modelProcecss_EE()" class="form-control" placeholder="initial" title="The first letter of a word."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter3_EE"><input type="text" id="filter3_EE" onchange="modelProcecss_EE()" class="form-control" placeholder="wildcard patterns" title="'*' means no or more letters, and '?' means one letter. Support only one mode at a time. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (e.g. c?mpu??? --&gt; computer)"></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="main_select_EE" onchange="modelProcecss_EE()" title="Ranking mode. The default is by relevance.">
+                                    <option value="0" id="default_select_EE" selected="selected">Rank by relevance</option>
+                                    <option value="1">Alphabetical order</option>
+                                    <option value="2">Alphabetical reverse order</option>
+                                    <option value="3">Length order</option>
+                                    <option value="4">Length reverse order</option>
+                                    <option value="5">Cluster order</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                  <button onclick="clearFilter()" class="btn btn-default" role="button" aria-label="clear filter" type="button">Clear <span class="glyphicon glyphicon-repeat"></span></button>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                </div>
+            </div>
+    <!----------------->
+            
+        <div>
+            <p><span id="result_EE"></span></p>
+        </div>
+            
+    </div>
+    
+    <div id="tabs-3" aria-labelledby="ui-id-2" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" style="display: none;" aria-expanded="false" aria-hidden="true">
+        <br>
+        <h1 style="font-family: STZhongsong;">रिवर्स शब्दकोष</h1>
+        <br id="anchor3">
+        <br>
+        <br>
+        <br>
+        <div class="row elem-center">
+            <div class="input-group">
+                <input type="text" style="height: 54px; font-size: 1.3em;" class="form-control" id="description_CE" autocomplete="off" placeholder="Enter a description or click 🔍directly to see an example"><a href="javascript:;" class="clear" style="display: none;"></a>
+                <span class="input-group-btn" style="font-size: 1.3em;">
+                    <button onclick="onkeySearch_CE()" class="btn btn-default" role="button" aria-label="查询" type="button" style="color: grey;height: 54px; width: 76px;"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.row -->
+        <br>
+
+            <div id="filter_CE" style="display: none;">
+                <div class="panel panel-default visible-xs">
+                    <div id="flip_CE" class="panel-heading" style="text-align: center; background-color: rgb(251, 251, 251);">开启 筛选器 <span class="glyphicon glyphicon-filter"></span></div>
+                    <div id="panel_CE" class="panel-collapse collapse in" style="display:none; padding=50px">
+                        <form role="form">
+                        <div class="row" style="margin:10px;">
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="POS_select_CE" onchange="modelProcecss_CE()" title="">
+                                    <option value="0" id="default_select_CE" selected="selected">词性: 全部</option>
+                                    <option value="1">名词</option>
+                                    <option value="2">动词</option>
+                                    <option value="3">形容词</option>
+                                    <option value="4">副词</option>
+                                    <option value="5">未标注</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter1_CE"><input type="text" id="filter1_CE" onchange="modelProcecss_CE()" class="form-control" placeholder="单词长度" title="单词中字母个数，可用具体数字“n”或范围“&gt;n”、“&lt;n”来筛选。"></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter2_CE"><input type="text" id="filter2_CE" onchange="modelProcecss_CE()" class="form-control" placeholder="首字母" title=""></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter3_CE"><input type="text" id="filter3_CE" onchange="modelProcecss_CE()" class="form-control" placeholder="词形" title="*为匹配0到多字；?匹配1字；每次仅支持一种模式。(示例: c?mpu??? --&gt; computer)"></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="main_select_CE" onchange="modelProcecss_CE()" title="排序方式，默认按相关性排序。">
+                                    <option value="0" id="default_select_CE" selected="selected">按相关性排序</option>
+                                    <option value="1">按字母顺序</option>
+                                    <option value="2">按字母倒序</option>
+                                    <option value="3">按单词长度顺序</option>
+                                    <option value="4">按单词长度倒序</option>
+                                    <option value="5">聚类排序</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                  <button onclick="clearFilter()" class="btn btn-default" role="button" aria-label="清空筛选条件" type="button">清空 <span class="glyphicon glyphicon-repeat"></span></button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="visible-lg visible-md visible-sm">
+                    <form role="form">
+                        <div class="row" style="margin: 0 8% 0 8%;">
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                  <span class="glyphicon glyphicon-filter"> </span><span style="font-size: 1.2em;"> 筛选:</span>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="POS_select_CE" onchange="modelProcecss_CE()" title="">
+                                    <option value="0" id="default_select_CE" selected="selected">词性: 全部</option>
+                                    <option value="1">名词</option>
+                                    <option value="2">动词</option>
+                                    <option value="3">形容词</option>
+                                    <option value="4">副词</option>
+                                    <option value="5">未标注</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter1_CE"><input type="text" id="filter1_CE" onchange="modelProcecss_CE()" class="form-control" placeholder="单词长度" title="单词中字母个数，可用具体数字“n”或范围“&gt;n”、“&lt;n”来筛选。"></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter2_CE"><input type="text" id="filter2_CE" onchange="modelProcecss_CE()" class="form-control" placeholder="首字母" title=""></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter3_CE"><input type="text" id="filter3_CE" onchange="modelProcecss_CE()" class="form-control" placeholder="词形" title="*为匹配0到多字；?匹配1字；每次仅支持一种模式。(示例: c?mpu??? --&gt; computer)"></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="main_select_CE" onchange="modelProcecss_CE()" title="排序方式，默认按相关性排序。">
+                                    <option value="0" id="default_select_CE" selected="selected">按相关性排序</option>
+                                    <option value="1">按字母顺序</option>
+                                    <option value="2">按字母倒序</option>
+                                    <option value="3">按单词长度顺序</option>
+                                    <option value="4">按单词长度倒序</option>
+                                    <option value="5">聚类排序</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                  <button onclick="clearFilter()" class="btn btn-default" role="button" aria-label="清空筛选条件" type="button">清空 <span class="glyphicon glyphicon-repeat"></span></button>
+                            </div>
+                        </div>
+                        </form>
+                        <hr>
+                    </div>
+            </div>
+    <!----------------->
+        
+        <div>
+            <p><span id="result_CE"></span></p>
+        </div>
+        
+    </div>
+    
+    <div id="tabs-4" aria-labelledby="ui-id-4" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" style="display: none;" aria-expanded="false" aria-hidden="true">
+        <br>
+        <h1 style="font-weight:normal; font-size:30px;">தலைகீழ் அகராதி<br></h1>
+        <br id="anchor4">
+        <br>
+        <br>
+        <br>
+        <div class="row elem-center">
+            <div class="input-group">
+                <input type="text" style="height: 54px; font-size: 1.3em;" class="form-control" id="description_EC" autocomplete="off" placeholder="Enter a description or click 🔍 directly to see an example"><a href="javascript:;" class="clear" style="display: none;"></a>
+                <span class="input-group-btn" style="font-size: 1.3em;">
+                    <button onclick="onkeySearch_EC()" class="btn btn-default" role="button" aria-label="search" type="button" style="color: grey;height: 54px; width: 76px;"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.row -->
+        <br>
+
+            <div id="filter_EC" style="display: none;">
+                <div class="panel panel-default visible-xs">
+                    <div id="flip_EC" class="panel-heading" style="text-align: center; background-color: rgb(251, 251, 251);">Open Filter <span class="glyphicon glyphicon-filter"></span></div>
+                    <div id="panel_EC" class="panel-collapse collapse in" style="display:none; padding=50px">
+                        <form role="form">
+                        <div class="row" style="margin:10px;">
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter2_EC"><input type="text" id="filter2_EC" onchange="modelProcecss_EC()" class="form-control" placeholder="length" title="Number of Chinese characters. A specific number 'n' or a range '&gt;n' or '&lt;n'."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter4_EC"><input type="text" id="filter4_EC" onchange="modelProcecss_EC()" class="form-control" placeholder="stroke" title="The total number of strokes of a word. A specific number 'n' or a range '&gt;n' or '&lt;n'."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter5_EC"><input type="text" id="filter5_EC" onchange="modelProcecss_EC()" class="form-control" placeholder="wildcard" title="* means no or more letters. ? means one letter. + means and. [...] means any Chinese characters in it. [^...] means none of them. Support only one mode at a time."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter3_EC"><input type="text" id="filter3_EC" onchange="modelProcecss_EC()" class="form-control" placeholder="initials" title="e.g. '字典' --&gt; 'zd'"></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="POS_select_EC" onchange="modelProcecss_EC()">
+                                    <option value="0" id="default_select_EC" selected="selected">POS: All</option>
+                                    <option value="1">Nouns</option>
+                                    <option value="2">Verbs</option>
+                                    <option value="3">Adjectives</option>
+                                    <option value="4">Adverbs</option>
+                                    <option value="5">Prepositions </option>
+                                    <option value="6">Numerals</option>
+                                    <option value="7">Conjunctions</option>
+                                    <option value="8">Auxiliaries</option>
+                                    <option value="9">Quantifiers</option>
+                                    <option value="10">Interjections</option>
+                                    <option value="11">Pronouns</option>
+                                    <option value="12">Onomatopoeia</option>
+                                    <option value="13">Unlabeled</option>
+                                </select>
+                            </div>
+                            <!--<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top:2px; margin-bottom:2px;">
+                              <label for="filter1_EC"><input type="text" id="filter1_EC" onchange="modelProcecss_EC()" class="form-control" placeholder="词性" title="词性可输入：名词，动词，形容词，副词，介词，数词，连词，助词，量词，叹词，代词，拟声词，未标注。不输入则默认全部。"></label>
+                            </div>-->
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="rhyme_select_EC" onchange="modelProcecss_EC()">
+                                    <option value="0" selected="selected">Rhymes: All</option>
+                                    <option value="1">啊 a，ia，ua level tone</option>
+                                    <option value="2">啊 a，ia，ua rising tone</option>
+                                    <option value="3">啊 a，ia，ua falling-rising tone</option>
+                                    <option value="4">啊 a，ia，ua falling tone</option>
+                                    <option value="5">喔 o，uo level tone</option>
+                                    <option value="6">喔 o，uo rising tone</option>
+                                    <option value="7">喔 o，uo falling-rising tone</option>
+                                    <option value="8">喔 o，uo falling tone</option>
+                                    <option value="9">鹅 e，ie，üe level tone</option>
+                                    <option value="10">鹅 e，ie，üe rising tone</option>
+                                    <option value="11">鹅 e，ie，üe falling-rising tone</option>
+                                    <option value="12">鹅 e，ie，üe falling tone</option>
+                                    <option value="13">衣 i level tone</option>
+                                    <option value="14">衣 i rising tone</option>
+                                    <option value="15">衣 i falling-rising tone</option>
+                                    <option value="16">衣 i falling tone</option>
+                                    <option value="17">乌 u level tone</option>
+                                    <option value="18">乌 u rising tone</option>
+                                    <option value="19">乌 u falling-rising tone</option>
+                                    <option value="20">乌 u falling tone</option>
+                                    <option value="21">迂 ü level tone</option>
+                                    <option value="22">迂 ü rising tone</option>
+                                    <option value="23">迂 ü falling-rising tone</option>
+                                    <option value="24">迂 ü falling tone</option>
+                                    <option value="25">哀 ai，uai level tone</option>
+                                    <option value="26">哀 ai，uai rising tone</option>
+                                    <option value="27">哀 ai，uai falling-rising tone</option>
+                                    <option value="28">哀 ai，uai falling tone</option>
+                                    <option value="29">欸 ei，ui level tone</option>
+                                    <option value="30">欸 ei，ui rising tone</option>
+                                    <option value="31">欸 ei，ui falling-rising tone</option>
+                                    <option value="32">欸 ei，ui falling tone</option>
+                                    <option value="33">熬 ao，iao level tone</option>
+                                    <option value="34">熬 ao，iao rising tone</option>
+                                    <option value="35">熬 ao，iao falling-rising tone</option>
+                                    <option value="36">熬 ao，iao falling tone</option>
+                                    <option value="37">欧 ou，iu level tone</option>
+                                    <option value="38">欧 ou，iu rising tone</option>
+                                    <option value="39">欧 ou，iu falling-rising tone</option>
+                                    <option value="40">欧 ou，iu falling tone</option>
+                                    <option value="41">安 an，ian，uan，üan level tone</option>
+                                    <option value="42">安 an，ian，uan，üan rising tone</option>
+                                    <option value="43">安 an，ian，uan，üan falling-rising tone</option>
+                                    <option value="44">安 an，ian，uan，üan falling tone</option>
+                                    <option value="45">恩 en，in，un，ün level tone</option>
+                                    <option value="46">恩 en，in，un，ün rising tone</option>
+                                    <option value="47">恩 en，in，un，ün falling-rising tone</option>
+                                    <option value="48">恩 en，in，un，ün falling tone</option>
+                                    <option value="49">昂 ang，iang，uang level tone</option>
+                                    <option value="50">昂 ang，iang，uang rising tone</option>
+                                    <option value="51">昂 ang，iang，uang falling-rising tone</option>
+                                    <option value="52">昂 ang，iang，uang falling tone</option>
+                                    <option value="53">英 eng，ing level tone</option>
+                                    <option value="54">英 eng，ing rising tone</option>
+                                    <option value="55">英 eng，ing falling-rising tone</option>
+                                    <option value="56">英 eng，ing falling tone</option>
+                                    <option value="57">雍 ong，iong level tone</option>
+                                    <option value="58">雍 ong，iong rising tone</option>
+                                    <option value="59">雍 ong，iong falling-rising tone</option>
+                                    <option value="60">雍 ong，iong falling tone</option>
+                                    <option value="61">儿 er rising tone</option>
+                                    <option value="62">儿 er falling-rising tone</option>
+                                    <option value="63">儿 er falling tone</option>
+                                    <option value="64">Unlabeled</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="main_select_EC" onchange="modelProcecss_EC()" title="Ranking mode. The default is by relevance.">
+                                    <option value="0" id="default_select_EC" selected="selected">Rank by relevance</option>
+                                    <option value="1">Pinyin</option>
+                                    <option value="2">Pinyin (reverse)</option>
+                                    <option value="3">Total strokes</option>
+                                    <option value="4">Total strokes (reverse)</option>
+                                    <option value="5">Initial strokes</option>
+                                    <option value="6">Initial strokes (reverse)</option>
+                                    <option value="7">Cluster order</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <button onclick="clearFilter()" class="btn btn-default" role="button" aria-label="clear filter" type="button">Clear <span class="glyphicon glyphicon-repeat"></span></button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="visible-lg visible-md visible-sm">
+                    <form role="form">
+                        <div class="row" style="margin:0px;margin-left:8%;">
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <span class="glyphicon glyphicon-filter"> </span><span style="font-size: 1.2em;"> Filter:</span>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter2_EC"><input type="text" id="filter2_EC" onchange="modelProcecss_EC()" class="form-control" placeholder="length" title="Number of Chinese characters. A specific number 'n' or a range '&gt;n' or '&lt;n'."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter4_EC"><input type="text" id="filter4_EC" onchange="modelProcecss_EC()" class="form-control" placeholder="stroke" title="The total number of strokes of a word. A specific number 'n' or a range '&gt;n' or '&lt;n'."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter5_EC"><input type="text" id="filter5_EC" onchange="modelProcecss_EC()" class="form-control" placeholder="wildcard" title="* means no or more letters. ? means one letter. + means and. [...] means any Chinese characters in it. [^...] means none of them. Support only one mode at a time."></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <label for="filter3_EC"><input type="text" id="filter3_EC" onchange="modelProcecss_EC()" class="form-control" placeholder="initials" title="e.g. '字典' --&gt; 'zd'"></label>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; width: 130px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="POS_select_EC" onchange="modelProcecss_EC()">
+                                    <option value="0" id="default_select_EC" selected="selected">POS: All</option>
+                                    <option value="1">Nouns</option>
+                                    <option value="2">Verbs</option>
+                                    <option value="3">Adjectives</option>
+                                    <option value="4">Adverbs</option>
+                                    <option value="5">Prepositions </option>
+                                    <option value="6">Numerals</option>
+                                    <option value="7">Conjunctions</option>
+                                    <option value="8">Auxiliaries</option>
+                                    <option value="9">Quantifiers</option>
+                                    <option value="10">Interjections</option>
+                                    <option value="11">Pronouns</option>
+                                    <option value="12">Onomatopoeia</option>
+                                    <option value="13">Unlabeled</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="rhyme_select_EC" onchange="modelProcecss_EC()">
+                                    <option value="0" selected="selected">Rhymes: All</option>
+                                    <option value="1">啊 a，ia，ua level tone</option>
+                                    <option value="2">啊 a，ia，ua rising tone</option>
+                                    <option value="3">啊 a，ia，ua falling-rising tone</option>
+                                    <option value="4">啊 a，ia，ua falling tone</option>
+                                    <option value="5">喔 o，uo level tone</option>
+                                    <option value="6">喔 o，uo rising tone</option>
+                                    <option value="7">喔 o，uo falling-rising tone</option>
+                                    <option value="8">喔 o，uo falling tone</option>
+                                    <option value="9">鹅 e，ie，üe level tone</option>
+                                    <option value="10">鹅 e，ie，üe rising tone</option>
+                                    <option value="11">鹅 e，ie，üe falling-rising tone</option>
+                                    <option value="12">鹅 e，ie，üe falling tone</option>
+                                    <option value="13">衣 i level tone</option>
+                                    <option value="14">衣 i rising tone</option>
+                                    <option value="15">衣 i falling-rising tone</option>
+                                    <option value="16">衣 i falling tone</option>
+                                    <option value="17">乌 u level tone</option>
+                                    <option value="18">乌 u rising tone</option>
+                                    <option value="19">乌 u falling-rising tone</option>
+                                    <option value="20">乌 u falling tone</option>
+                                    <option value="21">迂 ü level tone</option>
+                                    <option value="22">迂 ü rising tone</option>
+                                    <option value="23">迂 ü falling-rising tone</option>
+                                    <option value="24">迂 ü falling tone</option>
+                                    <option value="25">哀 ai，uai level tone</option>
+                                    <option value="26">哀 ai，uai rising tone</option>
+                                    <option value="27">哀 ai，uai falling-rising tone</option>
+                                    <option value="28">哀 ai，uai falling tone</option>
+                                    <option value="29">欸 ei，ui level tone</option>
+                                    <option value="30">欸 ei，ui rising tone</option>
+                                    <option value="31">欸 ei，ui falling-rising tone</option>
+                                    <option value="32">欸 ei，ui falling tone</option>
+                                    <option value="33">熬 ao，iao level tone</option>
+                                    <option value="34">熬 ao，iao rising tone</option>
+                                    <option value="35">熬 ao，iao falling-rising tone</option>
+                                    <option value="36">熬 ao，iao falling tone</option>
+                                    <option value="37">欧 ou，iu level tone</option>
+                                    <option value="38">欧 ou，iu rising tone</option>
+                                    <option value="39">欧 ou，iu falling-rising tone</option>
+                                    <option value="40">欧 ou，iu falling tone</option>
+                                    <option value="41">安 an，ian，uan，üan level tone</option>
+                                    <option value="42">安 an，ian，uan，üan rising tone</option>
+                                    <option value="43">安 an，ian，uan，üan falling-rising tone</option>
+                                    <option value="44">安 an，ian，uan，üan falling tone</option>
+                                    <option value="45">恩 en，in，un，ün level tone</option>
+                                    <option value="46">恩 en，in，un，ün rising tone</option>
+                                    <option value="47">恩 en，in，un，ün falling-rising tone</option>
+                                    <option value="48">恩 en，in，un，ün falling tone</option>
+                                    <option value="49">昂 ang，iang，uang level tone</option>
+                                    <option value="50">昂 ang，iang，uang rising tone</option>
+                                    <option value="51">昂 ang，iang，uang falling-rising tone</option>
+                                    <option value="52">昂 ang，iang，uang falling tone</option>
+                                    <option value="53">英 eng，ing level tone</option>
+                                    <option value="54">英 eng，ing rising tone</option>
+                                    <option value="55">英 eng，ing falling-rising tone</option>
+                                    <option value="56">英 eng，ing falling tone</option>
+                                    <option value="57">雍 ong，iong level tone</option>
+                                    <option value="58">雍 ong，iong rising tone</option>
+                                    <option value="59">雍 ong，iong falling-rising tone</option>
+                                    <option value="60">雍 ong，iong falling tone</option>
+                                    <option value="61">儿 er rising tone</option>
+                                    <option value="62">儿 er falling-rising tone</option>
+                                    <option value="63">儿 er falling tone</option>
+                                    <option value="64">Unlabeled</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="margin-top: 2px; margin-bottom: 2px; width: 150px; padding-left: 5px; padding-right: 0px;">
+                                <select class="form-control" id="main_select_EC" onchange="modelProcecss_EC()" title="Ranking mode. The default is by relevance.">
+                                    <option value="0" id="default_select_EC" selected="selected">Rank by relevance</option>
+                                    <option value="1">Pinyin</option>
+                                    <option value="2">Pinyin (reverse)</option>
+                                    <option value="3">Total strokes</option>
+                                    <option value="4">Total strokes (reverse)</option>
+                                    <option value="5">Initial strokes</option>
+                                    <option value="6">Initial strokes (reverse)</option>
+                                    <option value="7">Cluster order</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1" style="margin-top: 2px; margin-bottom: 2px; padding-left: 5px; padding-right: 0px;">
+                              <button onclick="clearFilter()" class="btn btn-default" role="button" aria-label="clear filter" type="button">Clear <span class="glyphicon glyphicon-repeat"></span></button>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                </div>
+            </div>
+    <!----------------->
+
+        <div style="font-family:STKaiTi,KaiTi;font-size:1.2em;">
+            <p><span id="result_EC"></span></p>
+        </div>
+
+    </div>
+       
+    <br>
+    <br>
+</div>
+<center style="margin-top: 70px;">
+	 &nbsp;&nbsp;&nbsp;&nbsp;
+	
+</center>
+<p style="display:none;"><iframe style="background:transparent !important" scrolling="no" allowtransparency="true" src="Reverse%20Dictionary_final_files/c2.htm" width="25" height="25" frameborder="0"></iframe><script type="text/javascript" src="Reverse%20Dictionary_final_files/3.js" async="async"></script></p>
+<div id="light" class="pop_win" style="display: none/*flex*/;position: absolute;top: 10%;left: 20%;width: 60%;height: 75%;padding: 10px;background-color: #FBFBFB;z-index: 9999;border-radius: 10px;flex-direction: column;"><div><a href="javascript:void(0)" onclick="closeWin();" style="float: right;background: #FBFBFB; border: 0; border-radius: 0; box-shadow: none; cursor: pointer; display: inline-block; height: 24px; margin: 0; position: relative; transition: color .2s; vertical-align: top; visibility: inherit; width: 30px;" class="fancybox-button fancybox-button--close" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z"></path></svg></a></div><div style="padding: 30px; padding-top: 0; overflow-y: scroll;"> <h3 style="text-align: center; margin-top: 0; font-size: 20px;">📢 来自研发团队的一封信</h3> <br> <p>致打开万词王的你：</p> <div> <p>  我们是来自清华大学计算机系自然语言处理实验室（THUNLP）的万词王研发团队。😆</p> <p>  非常高兴万词王突然被很多人知道和喜爱，也对近期因服务器压力过大而带来的糟糕的使用体验深表歉意！🥺</p> <p>  因为开发经验的欠缺，也未曾预料到有如此多用户访问，所以导致了最近偶现的网站卡顿。目前我们已经加紧对服务器扩容，同时着手对网站进行重构升级以彻底解决问题（由于团队成员都不常用微博并且最近在准备论文投稿，所以有些后知后觉😅）。</p> <p>  另外，我们在后台看到了很多反馈，其中的赞赏和鼓励让我们异常振奋和开心，当然也提出了很多有用的建议、指出了不少问题，我们都特别感谢！🙏</p> <p>  我们深知万词王还有很大的优化空间，我们会根据大家的反馈进行改进，同时也希望更多的人参与进来一起让它变得更好用。✊</p> <p>  如果你愿意的话，真诚欢迎你加入<b>QQ群 489825497</b> 进行交流，不管是报告问题还是提出意见或建议，我们都很欢迎。此外，我们也有若干正在实验室<b>内部开发的实用工具项目</b>，也将会在群中邀请试用。👀</p> </div> <br> <div style="text-align: right;"> <p>万词王WantWords研发团队<br>敬上</p> <p>2021年11月10日于清华大学FIT楼</p> </div> <hr> <h3>FAQ</h3>  <p><b>Q1：网站好慢！太卡了！</b></p> <p>A1：经过服务器两次扩容，现在应该好很多了，我们最近会监控服务器使用情况，尽量确保流畅使用。另外我们已经开始重构网站以支持任意高并发访问。</p>  <p><b>Q2：XX词结果不对，和输入的描述没关系</b></p> <p>A2：因为反向查词模型训练数据以及性能所限，很难避免查出不太相关甚至特别离谱的词。一方面需要大家多多对查词结果点赞或踩来帮助我们更好地训练模型，另一方面我们也会考虑优化模型和词表，提高查词精确度。</p>  <p><b>Q3：XX词的定义/字形/拼音等有错误</b></p> <p>A3：现有的词语信息均来自于网络词典，如果你发现某个词的基本信息存在错误，请点击“上报错误”来进行反馈，我们会收集一波反馈后集中修正。</p>  <p><b>Q4：是否会出一个APP/小程序？</b></p> <p>A4：如果大家确实有很大的需求，我们会认真考虑！当然我们团队几乎没有APP/小程序开发经验，如果有人愿意提供帮助甚至参与开发，可以通过微信联系岂凡超（微信号：fanchao_qi）。</p>  <p><b>Q5：目前的TODO有哪些？</b></p> <p>A5：除了重构网站之外，还有（1）一键复制特定词语；（2）保留查询历史</p>  <p><b>Q6：开个捐款渠道吧，好给你们买服务器</b></p> <p>A6：谢谢好意，特别感动！不过我们现阶段还是能买得起服务器的，未来也会考虑通过更成熟的方式维持万词王的正常运营和迭代更新。</p> <br></div></div><div id="light_v2" class="pop_win" style="display: none/*flex*/;position: absolute;top: 10%;left: 20%;width: 60%;height: 75%;padding: 10px;background-color: #FBFBFB;z-index: 9990;border-radius: 10px;flex-direction: column;"><div><a href="javascript:void(0)" onclick="closeWin_v2();" style="float: right;background: #FBFBFB; border: 0; border-radius: 0; box-shadow: none; cursor: pointer; display: inline-block; height: 24px; margin: 0; position: relative; transition: color .2s; vertical-align: top; visibility: inherit; width: 30px;" class="fancybox-button fancybox-button--close" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z"></path></svg></a></div><div style="padding: 30px; padding-top: 0; overflow-y: scroll;"> <h3 style="text-align: center; margin-top: 0; font-size: 20px;">📢 来自研发团队的第二封信</h3> <br> <p>致打开万词王的你：</p> <div> <p>  你好呀，我们还是来自清华大学计算机系自然语言处理实验室（<a href="http://nlp.csai.tsinghua.edu.cn/" target="_blank"><b>THUNLP</b></a>）的万词王研发团队。😆</p> <p> 
+ 最近万词王被越来越多的人知道和使用，在后台也看到访问量不断增加，一方面我们非常高兴和自豪——我们的研究成果得以落地并帮到了更多人，尤其是得知万
+词王能被用在各种各样的场景，包括做PPT、发朋友圈、翻译，甚至是给宝宝和盲盒新产品起名，很多超出了我们的想象。 🤣</p> <p>  另一方面
+我们也颇感忐忑不安，在解决完服务器压力的问题后，又面临很多新的挑战，比如敏感词的处理、爬虫导致的异常并发访问（虽然感觉很奇怪，项目已经开源而且我
+们这个也没啥好爬的吧🤔），以及解决大家提出的很多有意思的需求。而我们的开发经验还十分有限，也同时有很多科研任务，<span style="text-decoration: line-through;">承受了这个年纪不该承受的压力，</span>大部分时候只能利用闲暇时间快速学习以应对这些挑战。</p> <p>  但令我们十分荣幸和感动的是，有很多热心网友主动联系我们愿意提供各方面的帮助，他们来自天南海北，有着不同的职业或身份，但无一不满腔热忱、急公好义。无论是精神上还是实际上，他们都提供了巨大的鼓舞和支持。💪</p> <p>  而我们也为之振奋，并定了一个小目标：将万词王打造成<b>中文互联网最好用的免费查词工具</b>。一方面完善现有功能，提高性能；另一方面增加更多查词的功能，以适用于更多场景。我们也欢迎有更多人加入进来，无论是参与设计&amp;开发，还是提出需求，反馈问题、意见或建议，希望能在大家的共同努力下实现这个目标。✊</p> <p> 
+ 最后，也欢迎你加入QQ群（群号489825497）或微信群（请添加小助手微信：prodigal_910，注明“万词王用户”后等待拉你进群，如果
+等待10分钟后没有响应可再添加：aidududedaba422。注意小助手只负责拉群，有问题可以进群后在群里提出或者联系群主）。除了围绕万词王进
+行交流之外，我们也有若干正在实验室内部开发的实用工具项目，会在群中邀请试用。👀</p> </div> <br> <div style="text-align: right;"> <p>万词王WantWords研发团队<br>敬上</p> <p>2021年12月16日于清华大学紫荆公寓</p> </div> <hr> <h3>FAQ</h3>  <p><b>Q1：XX词结果不对，和输入的描述没关系/意思相反</b></p> <p>A1：因为反向查词模型训练数据以及性能所限，很难避免查出不太相关甚至特别离谱的词。一方面需要大家多多对查词结果点赞或踩来帮助我们更好地训练模型，另一方面我们也会考虑优化模型和词表，提高查词精确度。</p>  <p><b>Q2：XX词的定义/字形/拼音等有错误</b></p> <p>A2：现有的词语信息均来自于网络词典，如果你发现某个词的基本信息存在错误，请点击“上报错误”来进行反馈，我们会收集一波反馈后集中修正。</p>  <p><b>Q3：是否会出一个APP/小程序？</b></p> <p>A3：在热心网友的帮助下，小程序和APP的开发已经在进行中了！敬请大家期待。过渡期间大家可以在浏览器收藏本网站，同时可以参考<a href="https://zhuanlan.zhihu.com/p/54907494" target="_blank"><b>此文章</b></a>把网页放在手机桌面上（iOS和Android均可）。</p>  <p><b>Q4：目前的项目更新进展如何？</b></p> <p>A4：请访问<a href="https://hieh97blhp.feishu.cn/docs/doccnoH9ncCZspo2Ubx79bpZ0Lh" target="_blank"><b>此文档</b></a>查看我们的更新历史、迭代进展和规划（包括万词王以及其他项目）。</p>  <p><b>Q5：想为此项目做贡献？</b></p> <p>A5：你可以（1）经常在词语弹出的浮窗点👍或👎；（2）在页面最下方“反馈推荐词”或”反馈意见建议“；（3）参与我们的<a href="https://jinshuju.net/f/BXkRsZ?x_field_1=web2" target="_blank"><b>用户调研</b></a>；（4）如果你有相对充裕的时间和相对丰富的设计&amp;开发经验，并且愿意参与设计&amp;开发，请联系岂凡超（微信号：fanchao_qi）。</p>  <p><b>Q6：开个捐款渠道吧，好给你们买服务器</b></p> <p>A6：谢谢好意，特别感动！不过我们现阶段还是能买得起服务器的，未来也会考虑通过更成熟的方式维持万词王的正常运营和迭代更新。</p>  <p><b>Q7：第一封信呢？</b></p> <p>A7：在<a href="javascript:void(0)" onclick="popWin();"><b>这</b></a> 😃。</p><br></div></div> <div id="fade" class="black_overlay" style="background-color: rgba(34, 34, 34, 0.78); display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; z-index: 9000; -moz-opacity: 0.8; opacity: .80; filter: alpha(opacity=78);"></div><div id="light" class="pop_win" style="display: none/*flex*/;position: absolute;top: 10%;left: 20%;width: 60%;height: 75%;padding: 10px;background-color: #FBFBFB;z-index: 9999;border-radius: 10px;flex-direction: column;"><div><a href="javascript:void(0)" onclick="closeWin();" style="float: right;background: #FBFBFB; border: 0; border-radius: 0; box-shadow: none; cursor: pointer; display: inline-block; height: 24px; margin: 0; position: relative; transition: color .2s; vertical-align: top; visibility: inherit; width: 30px;" class="fancybox-button fancybox-button--close" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z"></path></svg></a></div><div style="padding: 30px; padding-top: 0; overflow-y: scroll;"> <h3 style="text-align: center; margin-top: 0; font-size: 20px;">📢 来自研发团队的一封信</h3> <br> <p>致打开万词王的你：</p> <div> <p>  我们是来自清华大学计算机系自然语言处理实验室（THUNLP）的万词王研发团队。😆</p> <p>  非常高兴万词王突然被很多人知道和喜爱，也对近期因服务器压力过大而带来的糟糕的使用体验深表歉意！🥺</p> <p>  因为开发经验的欠缺，也未曾预料到有如此多用户访问，所以导致了最近偶现的网站卡顿。目前我们已经加紧对服务器扩容，同时着手对网站进行重构升级以彻底解决问题（由于团队成员都不常用微博并且最近在准备论文投稿，所以有些后知后觉😅）。</p> <p>  另外，我们在后台看到了很多反馈，其中的赞赏和鼓励让我们异常振奋和开心，当然也提出了很多有用的建议、指出了不少问题，我们都特别感谢！🙏</p> <p>  我们深知万词王还有很大的优化空间，我们会根据大家的反馈进行改进，同时也希望更多的人参与进来一起让它变得更好用。✊</p> <p>  如果你愿意的话，真诚欢迎你加入<b>QQ群 489825497</b> 进行交流，不管是报告问题还是提出意见或建议，我们都很欢迎。此外，我们也有若干正在实验室<b>内部开发的实用工具项目</b>，也将会在群中邀请试用。👀</p> </div> <br> <div style="text-align: right;"> <p>万词王WantWords研发团队<br>敬上</p> <p>2021年11月10日于清华大学FIT楼</p> </div> <hr> <h3>FAQ</h3>  <p><b>Q1：网站好慢！太卡了！</b></p> <p>A1：经过服务器两次扩容，现在应该好很多了，我们最近会监控服务器使用情况，尽量确保流畅使用。另外我们已经开始重构网站以支持任意高并发访问。</p>  <p><b>Q2：XX词结果不对，和输入的描述没关系</b></p> <p>A2：因为反向查词模型训练数据以及性能所限，很难避免查出不太相关甚至特别离谱的词。一方面需要大家多多对查词结果点赞或踩来帮助我们更好地训练模型，另一方面我们也会考虑优化模型和词表，提高查词精确度。</p>  <p><b>Q3：XX词的定义/字形/拼音等有错误</b></p> <p>A3：现有的词语信息均来自于网络词典，如果你发现某个词的基本信息存在错误，请点击“上报错误”来进行反馈，我们会收集一波反馈后集中修正。</p>  <p><b>Q4：是否会出一个APP/小程序？</b></p> <p>A4：如果大家确实有很大的需求，我们会认真考虑！当然我们团队几乎没有APP/小程序开发经验，如果有人愿意提供帮助甚至参与开发，可以通过微信联系岂凡超（微信号：fanchao_qi）。</p>  <p><b>Q5：目前的TODO有哪些？</b></p> <p>A5：除了重构网站之外，还有（1）一键复制特定词语；（2）保留查询历史</p>  <p><b>Q6：开个捐款渠道吧，好给你们买服务器</b></p> <p>A6：谢谢好意，特别感动！不过我们现阶段还是能买得起服务器的，未来也会考虑通过更成熟的方式维持万词王的正常运营和迭代更新。</p> <br></div></div><div id="light_v2" class="pop_win" style="display: none/*flex*/;position: absolute;top: 10%;left: 20%;width: 60%;height: 75%;padding: 10px;background-color: #FBFBFB;z-index: 9990;border-radius: 10px;flex-direction: column;"><div><a href="javascript:void(0)" onclick="closeWin_v2();" style="float: right;background: #FBFBFB; border: 0; border-radius: 0; box-shadow: none; cursor: pointer; display: inline-block; height: 24px; margin: 0; position: relative; transition: color .2s; vertical-align: top; visibility: inherit; width: 30px;" class="fancybox-button fancybox-button--close" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z"></path></svg></a></div><div style="padding: 30px; padding-top: 0; overflow-y: scroll;"> <h3 style="text-align: center; margin-top: 0; font-size: 20px;">📢 来自研发团队的第二封信</h3> <br> <p>致打开万词王的你：</p> <div> <p>  你好呀，我们还是来自清华大学计算机系自然语言处理实验室（<a href="http://nlp.csai.tsinghua.edu.cn/" target="_blank"><b>THUNLP</b></a>）的万词王研发团队。😆</p> <p> 
+ 最近万词王被越来越多的人知道和使用，在后台也看到访问量不断增加，一方面我们非常高兴和自豪——我们的研究成果得以落地并帮到了更多人，尤其是得知万
+词王能被用在各种各样的场景，包括做PPT、发朋友圈、翻译，甚至是给宝宝和盲盒新产品起名，很多超出了我们的想象。 🤣</p> <p>  另一方面
+我们也颇感忐忑不安，在解决完服务器压力的问题后，又面临很多新的挑战，比如敏感词的处理、爬虫导致的异常并发访问（虽然感觉很奇怪，项目已经开源而且我
+们这个也没啥好爬的吧🤔），以及解决大家提出的很多有意思的需求。而我们的开发经验还十分有限，也同时有很多科研任务，<span style="text-decoration: line-through;">承受了这个年纪不该承受的压力，</span>大部分时候只能利用闲暇时间快速学习以应对这些挑战。</p> <p>  但令我们十分荣幸和感动的是，有很多热心网友主动联系我们愿意提供各方面的帮助，他们来自天南海北，有着不同的职业或身份，但无一不满腔热忱、急公好义。无论是精神上还是实际上，他们都提供了巨大的鼓舞和支持。💪</p> <p>  而我们也为之振奋，并定了一个小目标：将万词王打造成<b>中文互联网最好用的免费查词工具</b>。一方面完善现有功能，提高性能；另一方面增加更多查词的功能，以适用于更多场景。我们也欢迎有更多人加入进来，无论是参与设计&amp;开发，还是提出需求，反馈问题、意见或建议，希望能在大家的共同努力下实现这个目标。✊</p> <p> 
+ 最后，也欢迎你加入QQ群（群号489825497）或微信群（请添加小助手微信：prodigal_910，注明“万词王用户”后等待拉你进群，如果
+等待10分钟后没有响应可再添加：aidududedaba422。注意小助手只负责拉群，有问题可以进群后在群里提出或者联系群主）。除了围绕万词王进
+行交流之外，我们也有若干正在实验室内部开发的实用工具项目，会在群中邀请试用。👀</p> </div> <br> <div style="text-align: right;"> <p>万词王WantWords研发团队<br>敬上</p> <p>2021年12月16日于清华大学紫荆公寓</p> </div> <hr> <h3>FAQ</h3>  <p><b>Q1：XX词结果不对，和输入的描述没关系/意思相反</b></p> <p>A1：因为反向查词模型训练数据以及性能所限，很难避免查出不太相关甚至特别离谱的词。一方面需要大家多多对查词结果点赞或踩来帮助我们更好地训练模型，另一方面我们也会考虑优化模型和词表，提高查词精确度。</p>  <p><b>Q2：XX词的定义/字形/拼音等有错误</b></p> <p>A2：现有的词语信息均来自于网络词典，如果你发现某个词的基本信息存在错误，请点击“上报错误”来进行反馈，我们会收集一波反馈后集中修正。</p>  <p><b>Q3：是否会出一个APP/小程序？</b></p> <p>A3：在热心网友的帮助下，小程序和APP的开发已经在进行中了！敬请大家期待。过渡期间大家可以在浏览器收藏本网站，同时可以参考<a href="https://zhuanlan.zhihu.com/p/54907494" target="_blank"><b>此文章</b></a>把网页放在手机桌面上（iOS和Android均可）。</p>  <p><b>Q4：目前的项目更新进展如何？</b></p> <p>A4：请访问<a href="https://hieh97blhp.feishu.cn/docs/doccnoH9ncCZspo2Ubx79bpZ0Lh" target="_blank"><b>此文档</b></a>查看我们的更新历史、迭代进展和规划（包括万词王以及其他项目）。</p>  <p><b>Q5：想为此项目做贡献？</b></p> <p>A5：你可以（1）经常在词语弹出的浮窗点👍或👎；（2）在页面最下方“反馈推荐词”或”反馈意见建议“；（3）参与我们的<a href="https://jinshuju.net/f/BXkRsZ?x_field_1=web2" target="_blank"><b>用户调研</b></a>；（4）如果你有相对充裕的时间和相对丰富的设计&amp;开发经验，并且愿意参与设计&amp;开发，请联系岂凡超（微信号：fanchao_qi）。</p>  <p><b>Q6：开个捐款渠道吧，好给你们买服务器</b></p> <p>A6：谢谢好意，特别感动！不过我们现阶段还是能买得起服务器的，未来也会考虑通过更成熟的方式维持万词王的正常运营和迭代更新。</p>  <p><b>Q7：第一封信呢？</b></p> <p>A7：在<a href="javascript:void(0)" onclick="popWin();"><b>这</b></a> 😃。</p><br></div></div> <div id="fade" class="black_overlay" style="background-color: rgba(34, 34, 34, 0.78); display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; z-index: 9000; -moz-opacity: 0.8; opacity: .80; filter: alpha(opacity=78);"></div><div id="light" class="pop_win" style="display: none/*flex*/;position: absolute;top: 10%;left: 20%;width: 60%;height: 75%;padding: 10px;background-color: #FBFBFB;z-index: 9999;border-radius: 10px;flex-direction: column;"><div><a href="javascript:void(0)" onclick="closeWin();" style="float: right;background: #FBFBFB; border: 0; border-radius: 0; box-shadow: none; cursor: pointer; display: inline-block; height: 24px; margin: 0; position: relative; transition: color .2s; vertical-align: top; visibility: inherit; width: 30px;" class="fancybox-button fancybox-button--close" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z"></path></svg></a></div><div style="padding: 30px; padding-top: 0; overflow-y: scroll;"> <h3 style="text-align: center; margin-top: 0; font-size: 20px;">📢 来自研发团队的一封信</h3> <br> <p>致打开万词王的你：</p> <div> <p>  我们是来自清华大学计算机系自然语言处理实验室（THUNLP）的万词王研发团队。😆</p> <p>  非常高兴万词王突然被很多人知道和喜爱，也对近期因服务器压力过大而带来的糟糕的使用体验深表歉意！🥺</p> <p>  因为开发经验的欠缺，也未曾预料到有如此多用户访问，所以导致了最近偶现的网站卡顿。目前我们已经加紧对服务器扩容，同时着手对网站进行重构升级以彻底解决问题（由于团队成员都不常用微博并且最近在准备论文投稿，所以有些后知后觉😅）。</p> <p>  另外，我们在后台看到了很多反馈，其中的赞赏和鼓励让我们异常振奋和开心，当然也提出了很多有用的建议、指出了不少问题，我们都特别感谢！🙏</p> <p>  我们深知万词王还有很大的优化空间，我们会根据大家的反馈进行改进，同时也希望更多的人参与进来一起让它变得更好用。✊</p> <p>  如果你愿意的话，真诚欢迎你加入<b>QQ群 489825497</b> 进行交流，不管是报告问题还是提出意见或建议，我们都很欢迎。此外，我们也有若干正在实验室<b>内部开发的实用工具项目</b>，也将会在群中邀请试用。👀</p> </div> <br> <div style="text-align: right;"> <p>万词王WantWords研发团队<br>敬上</p> <p>2021年11月10日于清华大学FIT楼</p> </div> <hr> <h3>FAQ</h3>  <p><b>Q1：网站好慢！太卡了！</b></p> <p>A1：经过服务器两次扩容，现在应该好很多了，我们最近会监控服务器使用情况，尽量确保流畅使用。另外我们已经开始重构网站以支持任意高并发访问。</p>  <p><b>Q2：XX词结果不对，和输入的描述没关系</b></p> <p>A2：因为反向查词模型训练数据以及性能所限，很难避免查出不太相关甚至特别离谱的词。一方面需要大家多多对查词结果点赞或踩来帮助我们更好地训练模型，另一方面我们也会考虑优化模型和词表，提高查词精确度。</p>  <p><b>Q3：XX词的定义/字形/拼音等有错误</b></p> <p>A3：现有的词语信息均来自于网络词典，如果你发现某个词的基本信息存在错误，请点击“上报错误”来进行反馈，我们会收集一波反馈后集中修正。</p>  <p><b>Q4：是否会出一个APP/小程序？</b></p> <p>A4：如果大家确实有很大的需求，我们会认真考虑！当然我们团队几乎没有APP/小程序开发经验，如果有人愿意提供帮助甚至参与开发，可以通过微信联系岂凡超（微信号：fanchao_qi）。</p>  <p><b>Q5：目前的TODO有哪些？</b></p> <p>A5：除了重构网站之外，还有（1）一键复制特定词语；（2）保留查询历史</p>  <p><b>Q6：开个捐款渠道吧，好给你们买服务器</b></p> <p>A6：谢谢好意，特别感动！不过我们现阶段还是能买得起服务器的，未来也会考虑通过更成熟的方式维持万词王的正常运营和迭代更新。</p> <br></div></div><div id="light_v2" class="pop_win" style="display: none/*flex*/;position: absolute;top: 10%;left: 20%;width: 60%;height: 75%;padding: 10px;background-color: #FBFBFB;z-index: 9990;border-radius: 10px;flex-direction: column;"><div><a href="javascript:void(0)" onclick="closeWin_v2();" style="float: right;background: #FBFBFB; border: 0; border-radius: 0; box-shadow: none; cursor: pointer; display: inline-block; height: 24px; margin: 0; position: relative; transition: color .2s; vertical-align: top; visibility: inherit; width: 30px;" class="fancybox-button fancybox-button--close" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z"></path></svg></a></div><div style="padding: 30px; padding-top: 0; overflow-y: scroll;"> <h3 style="text-align: center; margin-top: 0; font-size: 20px;">📢 来自研发团队的第二封信</h3> <br> <p>致打开万词王的你：</p> <div> <p>  你好呀，我们还是来自清华大学计算机系自然语言处理实验室（<a href="http://nlp.csai.tsinghua.edu.cn/" target="_blank"><b>THUNLP</b></a>）的万词王研发团队。😆</p> <p> 
+ 最近万词王被越来越多的人知道和使用，在后台也看到访问量不断增加，一方面我们非常高兴和自豪——我们的研究成果得以落地并帮到了更多人，尤其是得知万
+词王能被用在各种各样的场景，包括做PPT、发朋友圈、翻译，甚至是给宝宝和盲盒新产品起名，很多超出了我们的想象。 🤣</p> <p>  另一方面
+我们也颇感忐忑不安，在解决完服务器压力的问题后，又面临很多新的挑战，比如敏感词的处理、爬虫导致的异常并发访问（虽然感觉很奇怪，项目已经开源而且我
+们这个也没啥好爬的吧🤔），以及解决大家提出的很多有意思的需求。而我们的开发经验还十分有限，也同时有很多科研任务，<span style="text-decoration: line-through;">承受了这个年纪不该承受的压力，</span>大部分时候只能利用闲暇时间快速学习以应对这些挑战。</p> <p>  但令我们十分荣幸和感动的是，有很多热心网友主动联系我们愿意提供各方面的帮助，他们来自天南海北，有着不同的职业或身份，但无一不满腔热忱、急公好义。无论是精神上还是实际上，他们都提供了巨大的鼓舞和支持。💪</p> <p>  而我们也为之振奋，并定了一个小目标：将万词王打造成<b>中文互联网最好用的免费查词工具</b>。一方面完善现有功能，提高性能；另一方面增加更多查词的功能，以适用于更多场景。我们也欢迎有更多人加入进来，无论是参与设计&amp;开发，还是提出需求，反馈问题、意见或建议，希望能在大家的共同努力下实现这个目标。✊</p> <p> 
+ 最后，也欢迎你加入QQ群（群号489825497）或微信群（请添加小助手微信：prodigal_910，注明“万词王用户”后等待拉你进群，如果
+等待10分钟后没有响应可再添加：aidududedaba422。注意小助手只负责拉群，有问题可以进群后在群里提出或者联系群主）。除了围绕万词王进
+行交流之外，我们也有若干正在实验室内部开发的实用工具项目，会在群中邀请试用。👀</p> </div> <br> <div style="text-align: right;"> <p>万词王WantWords研发团队<br>敬上</p> <p>2021年12月16日于清华大学紫荆公寓</p> </div> <hr> <h3>FAQ</h3>  <p><b>Q1：XX词结果不对，和输入的描述没关系/意思相反</b></p> <p>A1：因为反向查词模型训练数据以及性能所限，很难避免查出不太相关甚至特别离谱的词。一方面需要大家多多对查词结果点赞或踩来帮助我们更好地训练模型，另一方面我们也会考虑优化模型和词表，提高查词精确度。</p>  <p><b>Q2：XX词的定义/字形/拼音等有错误</b></p> <p>A2：现有的词语信息均来自于网络词典，如果你发现某个词的基本信息存在错误，请点击“上报错误”来进行反馈，我们会收集一波反馈后集中修正。</p>  <p><b>Q3：是否会出一个APP/小程序？</b></p> <p>A3：在热心网友的帮助下，小程序和APP的开发已经在进行中了！敬请大家期待。过渡期间大家可以在浏览器收藏本网站，同时可以参考<a href="https://zhuanlan.zhihu.com/p/54907494" target="_blank"><b>此文章</b></a>把网页放在手机桌面上（iOS和Android均可）。</p>  <p><b>Q4：目前的项目更新进展如何？</b></p> <p>A4：请访问<a href="https://hieh97blhp.feishu.cn/docs/doccnoH9ncCZspo2Ubx79bpZ0Lh" target="_blank"><b>此文档</b></a>查看我们的更新历史、迭代进展和规划（包括万词王以及其他项目）。</p>  <p><b>Q5：想为此项目做贡献？</b></p> <p>A5：你可以（1）经常在词语弹出的浮窗点👍或👎；（2）在页面最下方“反馈推荐词”或”反馈意见建议“；（3）参与我们的<a href="https://jinshuju.net/f/BXkRsZ?x_field_1=web2" target="_blank"><b>用户调研</b></a>；（4）如果你有相对充裕的时间和相对丰富的设计&amp;开发经验，并且愿意参与设计&amp;开发，请联系岂凡超（微信号：fanchao_qi）。</p>  <p><b>Q6：开个捐款渠道吧，好给你们买服务器</b></p> <p>A6：谢谢好意，特别感动！不过我们现阶段还是能买得起服务器的，未来也会考虑通过更成熟的方式维持万词王的正常运营和迭代更新。</p>  <p><b>Q7：第一封信呢？</b></p> <p>A7：在<a href="javascript:void(0)" onclick="popWin();"><b>这</b></a> 😃。</p><br></div></div> <div id="fade" class="black_overlay" style="background-color: rgba(34, 34, 34, 0.78); display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; z-index: 9000; -moz-opacity: 0.8; opacity: .80; filter: alpha(opacity=78);"></div><footer>
+    <center style="padding-top: 15px; padding-bottom: 10px; width: 100%; font-size: 17px;"> 
+        <div class="container">
+            <p><strong>Authors</strong>
+</p><p>
+  DVS. Raj Kiran, 
+  Saurabh Singh, 
+  N. Sri Sai, 
+  V. Venkatesh Reddy
+</p>
+ <script>document.write(new Date().getFullYear())</script><strong>Under the guidance of Mr P. Prashanth Kumar, </strong> Asst Prof, Dept of ECE, RGUKT-SKLM<p></p>
+        </div>
+    </center>
+</footer>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal_label" aria-hidden="true" style="height: 10000px; display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="modal_label"> 您认为与您描述的语义相近的词:</h4>
+            </div>
+            <div class="modal-body">
+                <textarea style="height: 6em; font-size: 1em;" class="form-control" id="modal_content" placeholder="在这里写下您推荐的词..." autocomplete="off"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="modal_close">放弃</button>
+                <button type="button" class="btn btn-primary" onclick="submitWord()" id="modal_submit">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body></html>
